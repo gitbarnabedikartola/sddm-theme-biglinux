@@ -9,6 +9,7 @@ url="https://github.com/biglinux/sddm-theme-biglinux"
 pkgdesc="Another sddm theme based in breeze"
 depends=('sddm' 'fortune-mod')
 source=("git+https://github.com/biglinux/sddm-theme-biglinux.git")
+makedepends=('git')
 md5sums=(SKIP)
 
 package() {
