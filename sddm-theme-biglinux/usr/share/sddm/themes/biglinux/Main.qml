@@ -41,8 +41,8 @@ PlasmaCore.ColorScope {
     colorGroup: PlasmaCore.Theme.ComplementaryColorGroup
     readonly property bool lightBackground: Math.max(PlasmaCore.ColorScope.backgroundColor.r, PlasmaCore.ColorScope.backgroundColor.g, PlasmaCore.ColorScope.backgroundColor.b) > 0.5
 
-    width: 1600
-    height: 900
+    width: 3440
+    height: 1440
 
     property string notificationMessage
 
@@ -75,7 +75,7 @@ PlasmaCore.ColorScope {
         anchors.fill: parent
 
         property bool uiVisible: true
-        property bool blockUI: mainStack.depth > 1 || userListComponent.mainPasswordBox.text.length > 2 || inputPanel.keyboardActive || config.type !== "image"
+        property bool blockUI: mainStack.depth > 1 || userListComponent.mainPasswordBox.text.length > 0 || inputPanel.keyboardActive || config.type !== "image"
 
         hoverEnabled: true
         drag.filterChildren: true
@@ -150,7 +150,7 @@ PlasmaCore.ColorScope {
             id: clock
             visible: y > 0
             anchors.horizontalCenter: parent.horizontalCenter
-            y: (userListComponent.userList.y + mainStack.y)/1.2 - height/100
+            y: (userListComponent.userList.y + mainStack.y)/0.6 - height/2
         }
         
         SessionButton{
@@ -158,23 +158,23 @@ PlasmaCore.ColorScope {
             
             anchors {
                 horizontalCenter: parent.horizontalCenter
-                bottom: phrasesModel.bottom
-                bottomMargin: units.largeSpacing * 3.5
+                bottom: clock.bottom
+                bottomMargin: units.largeSpacing * -5.0
             }
         }
         
-        PhrasesModel {
-            id: phrasesModel
-            anchors{
-                horizontalCenter: parent.horizontalCenter
-                bottom: clock.bottom
-                bottomMargin: units.gridUnit * -6.0
-            }
-        }
+         PhrasesModel {
+             id: phrasesModel
+             anchors{
+                 horizontalCenter: parent.horizontalCenter
+                 bottom: sessionButton.bottom
+                 bottomMargin: units.gridUnit * -7.9
+             }
+         }
         
         Row { 
             id: actionItems
-            spacing: units.largeSpacing / 2
+            spacing: units.largeSpacing / 5
             
             anchors {
                 horizontalCenter: parent.horizontalCenter
@@ -216,7 +216,7 @@ PlasmaCore.ColorScope {
                 right: parent.right
             }
             
-            height: root.height + units.gridUnit * 3
+            height: root.height + PlasmaCore.Units.gridUnit * -3
              
             focus: true //StackView is an implicit focus scope, so we need to give this focus so the item inside will have it
 
@@ -250,16 +250,16 @@ PlasmaCore.ColorScope {
                     }
 
                     notificationMessage: {
-                        var text = ""
-                        if (keystateSource.data["Caps Lock"]["Locked"]) {
-                            text += i18nd("plasma_lookandfeel_org.kde.lookandfeel","Caps Lock is on")
-                            if (root.notificationMessage) {
-                                text += " • "
-                            }
-                        }
-                        text += root.notificationMessage
-                        return text
+                    const parts = [];
+                    if (keystateSource.data["Caps Lock"]["Locked"]) {
+                        parts.push(i18nd("plasma_lookandfeel_org.kde.lookandfeel", "Caps Lock is on"));
                     }
+                    if (root.notificationMessage) {
+                        parts.push(root.notificationMessage);
+                    }
+                    return parts.join(" • ");
+                   
+                }
                     
                     onLoginRequest: {
                         root.notificationMessage = ""
